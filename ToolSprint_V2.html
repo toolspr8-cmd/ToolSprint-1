@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ToolSprint V2</title>
+<style>
+:root{--bg:#071018;--panel:rgba(12,25,37,.78);--text:#eaf7ff;--muted:#9eb3c2;--cyan:#00e5ff;--purple:#9b5cff;--green:#39ff88;--border:rgba(0,229,255,.22)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#071018;color:var(--text);min-height:100vh}
+button,input,select{font:inherit}.hidden{display:none!important}
+body.gamer{background:radial-gradient(circle at 15% 15%,#102c43 0,transparent 35%),radial-gradient(circle at 85% 75%,#24113d 0,transparent 38%),#050911}
+body.gamer:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(rgba(0,229,255,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.15) 1px,transparent 1px);background-size:48px 48px;animation:grid 18s linear infinite}
+@keyframes grid{to{background-position:48px 48px}}
+.top{padding:18px max(18px,4vw);display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);background:rgba(4,12,20,.7);backdrop-filter:blur(12px);position:sticky;top:0;z-index:5}
+.logo{font-size:22px;font-weight:900;letter-spacing:1px}.logo span{color:var(--cyan)}
+.btn{border:1px solid var(--border);background:var(--panel);color:var(--text);padding:10px 15px;border-radius:10px;cursor:pointer;transition:.18s;box-shadow:0 0 0 transparent}.btn:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 0 18px rgba(0,229,255,.2)}.primary{background:linear-gradient(135deg,#007f99,#6536b8);border:0}
+.hero{padding:42px max(18px,5vw) 25px;text-align:center}.hero h1{font-size:clamp(32px,7vw,68px);margin:5px 0;background:linear-gradient(90deg,#fff,var(--cyan),#b47cff);color:transparent;background-clip:text}.hero p{color:var(--muted);letter-spacing:5px;font-weight:bold}
+.search{max-width:760px;margin:20px auto;display:flex}.search input{width:100%;padding:16px 18px;border-radius:13px;border:1px solid var(--border);background:rgba(0,0,0,.35);color:white;outline:none}
+.wrap{max-width:1250px;margin:auto;padding:15px}.filters,.sections{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.filter.active{background:linear-gradient(135deg,#006d80,#5c2aa2);border-color:transparent}.sectionTitle{margin:30px 0 12px;font-size:22px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:17px;backdrop-filter:blur(10px);transition:.2s;position:relative}.card:hover{transform:translateY(-4px);box-shadow:0 0 25px rgba(0,229,255,.12)}.gameTitle{font-size:20px;font-weight:900;margin-right:32px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:15px 0;color:var(--muted);font-size:13px}.meta b{color:var(--text)}.fav{position:absolute;right:14px;top:14px;background:none;border:0;color:#aaa;font-size:24px;cursor:pointer}.fav.on{color:#ffd84d}.download{display:block;text-align:center;text-decoration:none}.tag{display:inline-block;padding:5px 8px;border-radius:99px;font-size:11px;margin:2px;background:rgba(0,229,255,.1);color:var(--cyan)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:18px;z-index:20}.modalBox{max-width:650px;width:100%;max-height:90vh;overflow:auto;background:#0b1723;border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 0 45px rgba(0,229,255,.15)}.close{float:right}
+.normal{background:#f4f7fb;color:#17202a;min-height:100vh}.normal .top{background:#fff;border-color:#ddd}.normal .panel{max-width:900px;margin:50px auto;padding:25px}.calc{max-width:340px;background:#fff;border:1px solid #ddd;border-radius:18px;padding:15px;box-shadow:0 8px 30px #0001}.display{width:100%;font-size:28px;padding:15px;text-align:right;margin-bottom:10px;border:1px solid #ddd;border-radius:10px}.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.keys button{padding:16px;border:0;border-radius:10px;background:#eef1f5;cursor:pointer}.keys button:hover{background:#dfe5ec}.span2{grid-column:span 2}
+.empty{text-align:center;color:var(--muted);padding:45px}
+footer{text-align:center;color:#6f8797;padding:35px}
+@media(max-width:600px){.top{padding:13px}.hero{padding-top:30px}.meta{grid-template-columns:1fr}.btn{padding:9px 11px}}
+</style>
+</head>
+<body class="normal">
+<div class="top">
+  <div class="logo" id="logo">ToolSprint</div>
+  <button class="btn primary" id="modeBtn">🎮 Gamer Mode</button>
+</div>
+
+<main id="normalView">
+  <div class="panel">
+    <h1>ToolSprint</h1>
+    <p>This is the new standalone V2 file. Your old ToolSprint site is not modified.</p>
+    <h2>🧮 Calculator</h2>
+    <div class="calc">
+      <input id="calcDisplay" class="display" value="0" aria-label="Calculator display">
+      <div class="keys">
+        <button data-c="C">C</button><button data-c="back">⌫</button><button data-c="%">%</button><button data-c="/">÷</button>
+        <button data-c="7">7</button><button data-c="8">8</button><button data-c="9">9</button><button data-c="*">×</button>
+        <button data-c="4">4</button><button data-c="5">5</button><button data-c="6">6</button><button data-c="-">−</button>
+        <button data-c="1">1</button><button data-c="2">2</button><button data-c="3">3</button><button data-c="+">+</button>
+        <button class="span2" data-c="0">0</button><button data-c=".">.</button><button data-c="=">=</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<main id="gamerView" class="hidden">
+  <section class="hero">
+    <div class="logo">ToolSprint <span>Gaming</span></div>
+    <h1>LEVEL UP YOUR GAME</h1>
+    <p>LIGHTWEIGHT • FAST • LEGAL</p>
+    <div class="search"><input id="search" placeholder="Search games..."></div>
+    <button class="btn" id="backBtn">↩ Back to ToolSprint</button>
+  </section>
+  <div class="wrap">
+    <h2 class="sectionTitle">🪟 Windows</h2>
+    <div class="filters" id="windows"></div>
+    <h2 class="sectionTitle">💻 Device Power</h2>
+    <div class="filters" id="power"></div>
+    <h2 class="sectionTitle">🧭 Browse</h2>
+    <div class="filters" id="categories"></div>
+    <h2 class="sectionTitle" id="libraryTitle">🎮 Game Library</h2>
+    <div class="grid" id="games"></div>
+  </div>
+  <footer>ToolSprint V2 Gaming • Official/legal download sources only</footer>
+</main>
+
+<div id="modal" class="modal hidden">
+ <div class="modalBox"><button class="btn close" onclick="closeModal()">✕</button><div id="modalContent"></div></div>
+</div>
+
+<script>
+const games=[
+ {name:"SuperTuxKart",genre:"Racing",cat:"RACING HUB",windows:["7","8","8.1","10","11"],size:"~1.2 GB",ram:"1 GB",cpu:"2 GHz",gpu:"OpenGL 3.3",power:"LOW END",mode:"Offline / Local Multiplayer",control:"Keyboard / Gamepad",year:"2004",storage:"2 GB",free:true,url:"https://supertuxkart.net/"},
+ {name:"0 A.D.",genre:"Strategy",cat:"SANDBOX WORLD",windows:["7","8","8.1","10","11"],size:"~2 GB",ram:"2 GB",cpu:"2 GHz dual-core",gpu:"OpenGL 2.1",power:"LOW END",mode:"Offline / Online",control:"Keyboard / Mouse",year:"2010",storage:"5 GB",free:true,url:"https://play0ad.com/download/"},
+ {name:"OpenTTD",genre:"Simulation",cat:"LIGHT GAMES",windows:["7","8","8.1","10","11"],size:"~30 MB",ram:"256 MB",cpu:"1 GHz",gpu:"OpenGL compatible",power:"LOW END",mode:"Offline / Online",control:"Keyboard / Mouse",year:"2004",storage:"200 MB",free:true,url:"https://www.openttd.org/downloads/openttd-releases/latest.html"},
+ {name:"Minetest",genre:"Sandbox",cat:"SANDBOX WORLD",windows:["7","8","8.1","10","11"],size:"~100 MB",ram:"1 GB",cpu:"1 GHz",gpu:"OpenGL 2.1",power:"LOW END",mode:"Offline / Online",control:"Keyboard / Mouse",year:"2010",storage:"1 GB",free:true,url:"https://www.minetest.net/download/"},
+ {name:"Xonotic",genre:"FPS",cat:"FPS ZONE",windows:["7","8","8.1","10","11"],size:"~1 GB",ram:"2 GB",cpu:"2 GHz",gpu:"OpenGL 2.1",power:"MID RANGE",mode:"Offline / Online",control:"Keyboard / Mouse",year:"2011",storage:"2 GB",free:true,url:"https://xonotic.org/download/"},
+ {name:"Warzone 2100",genre:"Strategy",cat:"SURVIVAL ZONE",windows:["7","8","8.1","10","11"],size:"~600 MB",ram:"2 GB",cpu:"2 GHz",gpu:"OpenGL 2.0",power:"LOW END",mode:"Offline / Online",control:"Keyboard / Mouse",year:"1999",storage:"1 GB",free:true,url:"https://www.wz2100.net/download/"},
+ {name:"AssaultCube",genre:"FPS",cat:"AIM TRAINER",windows:["7","8","8.1","10","11"],size:"~50 MB",ram:"1 GB",cpu:"1 GHz",gpu:"OpenGL",power:"LOW END",mode:"Offline / Online",control:"Keyboard / Mouse",year:"2006",storage:"100 MB",free:true,url:"https://assault.cubers.net/download.html"},
+ {name:"Minetest: Luanti",genre:"Sandbox",cat:"SANDBOX WORLD",windows:["10","11"],size:"~100 MB",ram:"1 GB",cpu:"1 GHz",gpu:"OpenGL 3.0",power:"MID RANGE",mode:"Offline / Online",control:"Keyboard / Mouse",year:"2010",storage:"1 GB",free:true,url:"https://www.luanti.org/downloads/"},
+ {name:"The Battle for Wesnoth",genre:"Strategy",cat:"LIGHT GAMES",windows:["7","8","8.1","10","11"],size:"~500 MB",ram:"1 GB",cpu:"1 GHz",gpu:"OpenGL",power:"LOW END",mode:"Offline / Online",control:"Keyboard / Mouse",year:"2003",storage:"1 GB",free:true,url:"https://www.wesnoth.org/download/"},
+ {name:"SuperTux",genre:"Platformer",cat:"LIGHT GAMES",windows:["7","8","8.1","10","11"],size:"~100 MB",ram:"512 MB",cpu:"1 GHz",gpu:"OpenGL",power:"LOW END",mode:"Offline",control:"Keyboard / Gamepad",year:"2003",storage:"300 MB",free:true,url:"https://supertux.org/download.html"}
+];
+let win="ALL", power="ALL", cat="ALL", query="", favorites=JSON.parse(localStorage.getItem("tsv2fav")||"[]");
+
+const windowsEl=document.getElementById("windows"),powerEl=document.getElementById("power"),catsEl=document.getElementById("categories");
+function filterButtons(el,items,current,setter){el.innerHTML=items.map(x=>`<button class="btn filter ${x===current?'active':''}" onclick="${setter}('${x.replace(/'/g,"\\'")}')">${x}</button>`).join("")}
+function setWin(x){win=x;render()}
+function setPower(x){power=x;render()}
+function setCat(x){cat=x;render()}
+function render(){
+ filterButtons(windowsEl,["ALL","7","8","8.1","10","11"],win,"setWin");
+ filterButtons(powerEl,["ALL","LOW END","MID RANGE","HIGH END"],power,"setPower");
+ filterButtons(catsEl,["ALL","FPS ZONE","RACING HUB","FOOTBALL ARENA","SANDBOX WORLD","SURVIVAL ZONE","AIM TRAINER","LIGHT GAMES","⭐ MY GAMES","🆕 NEW GAMES","🔥 POPULAR","🏆 BEST GAMES"],cat,"setCat");
+ let list=games.filter(g=>{
+   const text=(g.name+" "+g.genre+" "+g.cat).toLowerCase();
+   const q=!query||text.includes(query.toLowerCase());
+   const w=win==="ALL"||g.windows.includes(win);
+   const p=power==="ALL"||g.power===power;
+   let c=true;
+   if(cat==="⭐ MY GAMES")c=favorites.includes(g.name);
+   else if(cat==="🆕 NEW GAMES")c=+g.year>=2010;
+   else if(cat==="🔥 POPULAR")c=["SuperTuxKart","Xonotic","Minetest"].includes(g.name);
+   else if(cat==="🏆 BEST GAMES")c=["SuperTuxKart","0 A.D.","The Battle for Wesnoth"].includes(g.name);
+   else if(cat!=="ALL")c=g.cat===cat;
+   return q&&w&&p&&c;
+ });
+ document.getElementById("libraryTitle").textContent=(cat==="⭐ MY GAMES"?"⭐ My Games":"🎮 Game Library");
+ document.getElementById("games").innerHTML=list.length?list.map(card).join(""):`<div class="empty">No games match these filters.</div>`;
+}
+function card(g){
+ const on=favorites.includes(g.name);
+ return `<article class="card" onclick="openGame('${g.name.replace(/'/g,"\\'")}')">
+ <button class="fav ${on?'on':''}" onclick="event.stopPropagation();toggleFav('${g.name.replace(/'/g,"\\'")}')" title="Add to Favorites">${on?'★':'☆'}</button>
+ <div class="gameTitle">🎮 ${g.name}</div><span class="tag">${g.genre}</span>
+ <div class="meta">
+ <div>🪟 <b>Windows:</b> ${g.windows.join(" / ")}</div><div>💾 <b>Size:</b> ${g.size}</div>
+ <div>🧠 <b>RAM:</b> ${g.ram}</div><div>⚙️ <b>CPU:</b> ${g.cpu}</div>
+ <div>🎨 <b>GPU:</b> ${g.gpu}</div><div>📶 <b>Mode:</b> ${g.mode}</div>
+ </div><div class="tag">${g.power}</div><div class="tag">🟢 Free</div>
+ <a class="btn primary download" href="${g.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">⬇️ OFFICIAL DOWNLOAD</a>
+ </article>`;
+}
+function toggleFav(n){favorites=favorites.includes(n)?favorites.filter(x=>x!==n):[...favorites,n];localStorage.setItem("tsv2fav",JSON.stringify(favorites));render()}
+function openGame(n){
+ const g=games.find(x=>x.name===n);if(!g)return;
+ document.getElementById("modalContent").innerHTML=`<h2>🎮 ${g.name}</h2><p><span class="tag">${g.genre}</span> <span class="tag">${g.power}</span></p>
+ <div class="meta"><div>🏷️ <b>Genre:</b> ${g.genre}</div><div>📅 <b>Year:</b> ${g.year}</div><div>💾 <b>Size:</b> ${g.size}</div><div>🪟 <b>Windows:</b> ${g.windows.join(" / ")}</div><div>🧠 <b>RAM:</b> ${g.ram}</div><div>⚙️ <b>CPU:</b> ${g.cpu}</div><div>🎨 <b>GPU:</b> ${g.gpu}</div><div>💿 <b>Storage:</b> ${g.storage}</div><div>📶 <b>Online/Offline:</b> ${g.mode}</div><div>🎮 <b>Control:</b> ${g.control}</div><div>🟢 <b>Free:</b> Yes</div></div>
+ <a class="btn primary download" href="${g.url}" target="_blank" rel="noopener">⬇️ OFFICIAL DOWNLOAD</a>`;
+ document.getElementById("modal").classList.remove("hidden");
+}
+function closeModal(){document.getElementById("modal").classList.add("hidden")}
+document.getElementById("search").oninput=e=>{query=e.target.value;render()};
+document.getElementById("modeBtn").onclick=()=>{document.body.className="gamer";document.getElementById("normalView").classList.add("hidden");document.getElementById("gamerView").classList.remove("hidden");document.getElementById("logo").innerHTML="ToolSprint <span>Gaming</span>";render()};
+document.getElementById("backBtn").onclick=()=>{document.body.className="normal";document.getElementById("gamerView").classList.add("hidden");document.getElementById("normalView").classList.remove("hidden");document.getElementById("logo").textContent="ToolSprint"};
+
+const display=document.getElementById("calcDisplay");let expr="";
+function calcInput(v){
+ if(v==="C"){expr=""}
+ else if(v==="back"){expr=expr.slice(0,-1)}
+ else if(v==="="){try{expr=String(Function('"use strict";return ('+expr.replace(/%/g,"/100")+')')())}catch{expr=""}}
+ else expr+=v;
+ display.value=expr||"0";
+}
+document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>calcInput(b.dataset.c));
+document.addEventListener("keydown",e=>{
+ if(!document.getElementById("normalView").classList.contains("hidden")){
+   if(/^[0-9.+\-*/%]$/.test(e.key))calcInput(e.key);
+   else if(e.key==="Enter"||e.key==="=")calcInput("=");
+   else if(e.key==="Backspace")calcInput("back");
+   else if(e.key.toLowerCase()==="c")calcInput("C");
+ }
+});
+render();
+</script>
+</body>
+</html>
